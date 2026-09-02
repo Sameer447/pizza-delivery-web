@@ -4,3 +4,5 @@ out/
 .env*.local
 *.log
 coverage/
+.DS_Store
+htmls

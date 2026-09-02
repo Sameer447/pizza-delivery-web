@@ -3,8 +3,25 @@
 @tailwind utilities;
 
 @layer base {
-  :root { --background: 210 20% 98%; --foreground: 222 47% 11%; --card: 0 0% 100%; --card-foreground: 222 47% 11%; --primary: 222 47% 11%; --primary-foreground: 210 40% 98%; --secondary: 210 40% 96%; --secondary-foreground: 222 47% 11%; --muted: 210 40% 96%; --muted-foreground: 215 16% 47%; --border: 214 32% 91%; --input: 214 32% 91%; --ring: 222 84% 5%; --destructive: 0 84% 60%; --radius: 0.5rem; }
-  .dark { --background: 222 47% 7%; --foreground: 210 40% 98%; --card: 222 47% 10%; --card-foreground: 210 40% 98%; --primary: 210 40% 98%; --primary-foreground: 222 47% 11%; --secondary: 217 33% 18%; --secondary-foreground: 210 40% 98%; --muted: 217 33% 18%; --muted-foreground: 215 20% 65%; --border: 217 33% 18%; --input: 217 33% 18%; --ring: 213 27% 84%; --destructive: 0 63% 31%; }
+  :root { --background: 0 100% 98%; --foreground: 6 30% 12%; --card: 0 0% 100%; --card-foreground: 6 30% 12%; --primary: 343 100% 36%; --primary-foreground: 0 0% 100%; --primary-container: 348 77% 50%; --secondary: 240 2% 37%; --secondary-foreground: 0 0% 100%; --muted: 0 100% 97%; --muted-foreground: 6 13% 38%; --border: 0 40% 82%; --input: 0 40% 82%; --ring: 343 100% 36%; --destructive: 0 75% 42%; --success: 168 100% 20%; --warning: 33 90% 30%; --info: 215 75% 38%; --surface-lowest: 0 0% 100%; --surface-low: 0 100% 97%; --surface: 0 100% 96%; --surface-high: 0 100% 94%; --surface-highest: 0 63% 92%; --outline: 3 13% 50%; --outline-variant: 0 40% 82%; --radius-sm: 2px; --radius: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px; --shadow-soft: 0 4px 14px rgb(40 23 24 / 0.08); --motion-fast: 120ms; }
+  .dark { --background: 240 6% 4%; --foreground: 0 0% 93%; --card: 240 6% 9%; --card-foreground: 0 0% 93%; --primary: 348 77% 50%; --primary-foreground: 0 0% 100%; --primary-container: 343 100% 36%; --secondary: 240 5% 74%; --secondary-foreground: 240 6% 4%; --muted: 240 5% 12%; --muted-foreground: 240 5% 68%; --border: 240 5% 16%; --input: 240 5% 16%; --ring: 348 77% 50%; --destructive: 0 70% 56%; --success: 158 64% 50%; --warning: 38 92% 60%; --info: 213 94% 68%; --surface-lowest: 240 6% 10%; --surface-low: 240 5% 8%; --surface: 240 5% 10%; --surface-high: 240 5% 13%; --surface-highest: 240 5% 16%; --outline: 240 5% 48%; --outline-variant: 240 5% 20%; --shadow-soft: 0 4px 14px rgb(0 0 0 / 0.28); }
   * { @apply border-border; }
   body { @apply bg-background text-foreground antialiased; }
+  button, input { transition-duration: var(--motion-fast); }
+}
+
+@layer components {
+  .admin-sidebar { background: #18181b; color: #f4f4f5; }
+  .admin-sidebar .nav-link { color: #a1a1aa; border-left: 2px solid transparent; border-radius: var(--radius); }
+  .admin-sidebar .nav-link:hover { background: #27272a; color: #fafafa; }
+  .admin-sidebar .nav-link[aria-current="page"] { background: rgb(184 0 53 / 0.16); border-left-color: #e11d48; color: #fff; }
+  .type-display { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; letter-spacing: -0.025em; }
+  .type-page-title { font-size: 1.5rem; line-height: 2rem; font-weight: 600; letter-spacing: -0.015em; }
+  .type-section-title { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
+  .type-card-title { font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; }
+  .type-body-lg { font-size: 1rem; line-height: 1.5rem; }
+  .type-body-reg { font-size: 0.875rem; line-height: 1.25rem; }
+  .type-body-sm { font-size: 0.75rem; line-height: 1rem; }
+  .type-label-caps, .type-table-header { font-size: 0.6875rem; line-height: 1rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .type-table-header { letter-spacing: 0.06em; }
 }
