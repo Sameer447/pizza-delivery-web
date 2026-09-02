@@ -1,0 +1,2 @@
+import type { ReactNode } from "react";
+export function PageContainer({ title, description, children }: { title: string; description?: string; children: ReactNode }) { return <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6"><div><p className="mb-1 text-sm text-muted-foreground">Admin workspace</p><h1 className="text-2xl font-semibold tracking-tight">{title}</h1>{description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}</div>{children}</div>; }

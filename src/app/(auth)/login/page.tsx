@@ -1,0 +1,12 @@
+"use client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/providers/auth-provider";
+const schema = z.object({ email: z.string().email("Enter a valid email address"), password: z.string().min(1, "Enter your password"), rememberMe: z.boolean().optional() });
+type FormValues = z.infer<typeof schema>;
+export default function LoginPage() { const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormValues>(); const { login, isAuthenticated, isLoading } = useAuth(); const router = useRouter(); if (!isLoading && isAuthenticated) { router.replace("/dashboard"); return null; } const submit = async (values: FormValues) => { const parsed = schema.safeParse(values); if (!parsed.success) { parsed.error.issues.forEach((issue) => setError(issue.path[0] as keyof FormValues, { message: issue.message })); return; } try { await login(parsed.data); } catch { setError("root", { message: "Sign in failed. Check your credentials and try again." }); } }; return <Card className="w-full max-w-md"><CardHeader><CardTitle>Sign in to Pizza Admin</CardTitle><p className="text-sm text-muted-foreground">Manage your platform workspace.</p></CardHeader><CardContent><form className="space-y-4" onSubmit={handleSubmit(submit)}><label className="block space-y-1 text-sm font-medium">Email<Input type="email" autoComplete="email" {...register("email")} />{errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}</label><label className="block space-y-1 text-sm font-medium">Password<Input type="password" autoComplete="current-password" {...register("password")} />{errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}</label><label className="flex items-center gap-2 text-sm text-muted-foreground"><input type="checkbox" {...register("rememberMe")} />Remember me</label>{errors.root && <p className="text-sm text-destructive" role="alert">{errors.root.message}</p>}<Button className="w-full" disabled={isSubmitting} type="submit">{isSubmitting ? "Signing in…" : "Sign In"}</Button><Link className="block text-center text-sm text-muted-foreground underline" href="/forgot-password">Forgot password?</Link></form></CardContent></Card>; }
