@@ -1,6 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SplashPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const redirectTimer = window.setTimeout(() => router.replace("/login"), 2000);
+    return () => window.clearTimeout(redirectTimer);
+  }, [router]);
+
   return (
     <main className="splash-grid relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-8 text-center text-foreground">
       <div className="absolute left-8 top-8 flex gap-2" aria-hidden="true">

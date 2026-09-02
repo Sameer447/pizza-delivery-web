@@ -1,0 +1,2 @@
+import { RestaurantTable } from "@/components/restaurants/restaurant-table";
+export default function RestaurantSelectionPage() { return <div className="h-full overflow-y-auto p-4 sm:p-6"><div className="mx-auto max-w-[1440px] space-y-6"><div><h1 className="type-page-title">Restaurants</h1><p className="mt-1 text-body-reg text-muted-foreground">Select locations for a bulk action.</p></div><RestaurantTable selection /></div></div>; }
