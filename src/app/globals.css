@@ -8,6 +8,7 @@
   * { @apply border-border; }
   body { @apply bg-background text-foreground antialiased; }
   button, input { transition-duration: var(--motion-fast); }
+  @keyframes splash-progress { from { transform: translateX(-60px); } to { transform: translateX(240px); } }
 }
 
 @layer components {
@@ -24,4 +25,7 @@
   .type-body-sm { font-size: 0.75rem; line-height: 1rem; }
   .type-label-caps, .type-table-header { font-size: 0.6875rem; line-height: 1rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
   .type-table-header { letter-spacing: 0.06em; }
+  .splash-grid { background-size: 32px 32px; background-image: linear-gradient(to right, hsl(var(--outline-variant) / 0.2) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--outline-variant) / 0.2) 1px, transparent 1px); }
+  .splash-progress { animation: splash-progress 2s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .splash-progress { animation: none; transform: translateX(90px); } }
 }
