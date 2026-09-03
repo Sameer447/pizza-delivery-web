@@ -5,4 +5,5 @@ out/
 *.log
 coverage/
 .DS_Store
-htmls
+htmls/
+docs/

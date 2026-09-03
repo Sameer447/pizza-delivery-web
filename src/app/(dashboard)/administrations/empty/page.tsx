@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { UserPlus } from "lucide-react";
+import { AdminEmptyIcon } from "@/components/administrations/administration-table";
+export default function EmptyAdministrationsPage() { return <div className="flex h-full min-h-[calc(100vh-4rem)] items-center justify-center overflow-y-auto p-6"><div className="flex w-full max-w-lg flex-col items-center text-center"><AdminEmptyIcon /><h1 className="type-section-title mb-2">No restaurant administrators</h1><p className="mb-8 max-w-md text-body-reg text-muted-foreground">Invite an administrator to start managing Pizza House. Assign granular permissions and keep every operational action accountable.</p><Link href="/administrations/invite" className="inline-flex h-10 items-center gap-2 rounded-[var(--radius)] bg-primary px-6 font-semibold text-white hover:bg-primary-container"><UserPlus className="h-4 w-4" />Invite Administrator</Link></div></div>; }
