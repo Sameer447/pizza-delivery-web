@@ -20,23 +20,31 @@ import {
   X,
 } from "lucide-react";
 
-import { hasRole } from "@/lib/permissions";
+import { canAny, hasRole } from "@/lib/permissions";
 import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/providers/auth-provider";
 
 const items = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   {
+    label: "Restaurant Dashboard",
+    href: "/restaurant-dashboard",
+    icon: Store,
+    permissions: ["restaurant.dashboard.read"],
+  },
+  {
     label: "Restaurants",
     href: "/restaurants",
     icon: Store,
     roles: ["SUPER_ADMIN"] as const,
+    permissions: ["restaurants.read"],
   },
   {
     label: "Administrators",
     href: "/administrations",
     icon: Users,
     roles: ["SUPER_ADMIN"] as const,
+    permissions: ["administrations.read"],
   },
   { label: "Orders", href: "/orders", icon: ShoppingBag },
   { label: "Menu", href: "/menu", icon: Utensils },
@@ -48,6 +56,7 @@ const items = [
     href: "/staff",
     icon: UserCog,
     roles: ["RESTAURANT_ADMIN"] as const,
+    permissions: ["staff.read"],
   },
   {
     label: "Audit Logs",
@@ -55,7 +64,7 @@ const items = [
     icon: Shield,
     roles: ["SUPER_ADMIN"] as const,
   },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "Settings", href: "/restaurant-dashboard/settings", icon: Settings },
 ];
 
 type SidebarProps = { open?: boolean; onClose?: () => void };
@@ -64,7 +73,9 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const visibleItems = items.filter(
-    (item) => !item.roles || item.roles.some((role) => hasRole(user, role)),
+    (item) =>
+      (!item.roles || item.roles.some((role) => hasRole(user, role))) &&
+      (!item.permissions || canAny(user, item.permissions)),
   );
 
   const isActive = (href: string) =>
