@@ -11,6 +11,7 @@ import {
   Save,
   Store,
   Truck,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -288,7 +289,7 @@ function Dashboard({ closed = false }: { closed?: boolean }) {
 function Profile({ edit = false }: { edit?: boolean }) {
   return (
     <PageFrame
-      title={edit ? "Restaurant Profile & Preferences" : "Restaurant Profile"}
+      title={edit ? "Restaurant Profile & Preferences" : "Pizza House"}
       description={
         edit
           ? "Update the information customers and staff use to identify this location."
@@ -320,7 +321,9 @@ function Profile({ edit = false }: { edit?: boolean }) {
     >
       <Card>
         <CardHeader>
-          <CardTitle>Restaurant identity</CardTitle>
+          <CardTitle>
+            {edit ? "Branding & Identity" : "Contact Information"}
+          </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <div className="flex items-center gap-4 sm:col-span-2">
@@ -336,6 +339,29 @@ function Profile({ edit = false }: { edit?: boolean }) {
           </div>
           {edit ? (
             <>
+              <div className="rounded border border-dashed bg-surface-low p-5 sm:col-span-2">
+                <div className="flex flex-col items-center justify-center gap-3 text-center">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-lg)] bg-primary/10 text-2xl font-bold text-primary">
+                    PH
+                  </div>
+                  <p className="text-sm font-semibold">Restaurant Logo</p>
+                  <p className="text-xs text-muted-foreground">
+                    Drag and drop or click to upload · PNG, JPG or SVG up to 2MB
+                  </p>
+                  <Button
+                    type="button"
+                    className="h-9 bg-surface-high text-foreground hover:bg-surface-highest"
+                  >
+                    Upload new logo
+                  </Button>
+                </div>
+              </div>
+              <div className="border-b pb-2 sm:col-span-2">
+                <h3 className="font-semibold">General Information</h3>
+                <p className="text-xs text-muted-foreground">
+                  Basic identifiers and contact numbers.
+                </p>
+              </div>
               <Field label="Restaurant name">
                 <Input defaultValue="Pizza House" />
               </Field>
@@ -353,6 +379,28 @@ function Profile({ edit = false }: { edit?: boolean }) {
               </Field>
               <Field label="City / region">
                 <Input defaultValue="Lahore, Punjab, Pakistan" />
+              </Field>
+              <Field label="Postal code">
+                <Input defaultValue="54000" />
+              </Field>
+              <Field label="Cuisine type">
+                <Input defaultValue="Pizza & Italian" />
+              </Field>
+              <div className="border-b pb-2 sm:col-span-2">
+                <h3 className="font-semibold">Location & Address</h3>
+                <p className="text-xs text-muted-foreground">
+                  Physical storefront location for delivery and pickup.
+                </p>
+              </div>
+              <Field label="Full address">
+                <Input defaultValue="Shop 4, Commercial Plaza, Block C, Gulberg III" />
+              </Field>
+              <Field label="Country">
+                <select className="h-10 w-full rounded-[var(--radius)] border bg-surface-lowest px-3 text-sm">
+                  <option>Pakistan</option>
+                  <option>United States</option>
+                  <option>Canada</option>
+                </select>
               </Field>
             </>
           ) : (
@@ -466,6 +514,286 @@ function SettingsOverview() {
   );
 }
 
+function DeliverySettingsContent() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-2">
+      <Card className="p-5">
+        <h3 className="font-semibold">Delivery System</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Master toggle for online customer delivery.
+        </p>
+        <div className="mt-5">
+          <Toggle label="Enable delivery" />
+        </div>
+      </Card>
+      <Card className="p-5">
+        <h3 className="font-semibold">Pricing & Minimum Order</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Configure baseline shipping costs and order eligibility.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <Field label="Delivery fee">
+            <Input defaultValue="200" type="number" />
+          </Field>
+          <Field label="Minimum order value">
+            <Input defaultValue="500" type="number" />
+          </Field>
+        </div>
+      </Card>
+      <Card className="p-5 lg:col-span-2">
+        <h3 className="font-semibold">Radius & Time Estimation</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Set operational boundaries and dispatch estimates.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-3">
+          <Field label="Maximum radius (km)">
+            <Input defaultValue="8" type="number" />
+          </Field>
+          <Field label="Minimum time (mins)">
+            <Input defaultValue="30" type="number" />
+          </Field>
+          <Field label="Maximum time (mins)">
+            <Input defaultValue="45" type="number" />
+          </Field>
+        </div>
+      </Card>
+      <Card className="border-destructive/30 bg-destructive/10 p-5 lg:col-span-2">
+        <h3 className="font-semibold text-destructive">Emergency Pause</h3>
+        <p className="mt-1 text-body-sm text-destructive/80">
+          Temporarily halt new delivery orders during operational incidents.
+        </p>
+        <div className="mt-5 flex items-center justify-between gap-4">
+          <span className="text-body-sm font-medium">
+            Pause delivery immediately
+          </span>
+          <Toggle label="" checked={false} />
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function PickupSettingsContent() {
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold">Customer Pickup Status</h3>
+            <p className="mt-1 text-body-sm text-muted-foreground">
+              Enable or temporarily disable customer pickup.
+            </p>
+          </div>
+          <Toggle label="" />
+        </div>
+        <div className="mt-6 grid gap-4 border-t pt-5 sm:grid-cols-2">
+          <Field label="Minimum preparation time (mins)">
+            <Input defaultValue="15" type="number" />
+          </Field>
+          <Field label="Maximum preparation time (mins)">
+            <Input defaultValue="20" type="number" />
+          </Field>
+          <Field label="Surge buffer">
+            <select className="h-10 w-full rounded-[var(--radius)] border bg-surface-lowest px-3 text-sm">
+              <option>Auto-adjust based on active orders (+5m)</option>
+              <option>Conservative (+10m)</option>
+              <option>Fixed range only (No buffer)</option>
+            </select>
+          </Field>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <h3 className="font-semibold">Pickup Instructions</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Provide clear directions for customers arriving at the restaurant.
+        </p>
+        <textarea
+          className="mt-4 min-h-28 w-full rounded-[var(--radius)] border bg-surface-lowest px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          defaultValue="Please head straight to Counter #2 upon arrival. Show your confirmation code to our team member. Parking is available in the rear alley for 15 minutes max."
+        />
+      </Card>
+      <Card className="p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold">Allow Scheduled Pickups</h3>
+            <p className="mt-1 text-body-sm text-muted-foreground">
+              Let customers place pickup orders ahead of time.
+            </p>
+          </div>
+          <Toggle label="" />
+        </div>
+        <div className="mt-6 grid gap-4 border-t pt-5 sm:grid-cols-2">
+          <Field label="Maximum days in advance">
+            <Input defaultValue="7" type="number" />
+          </Field>
+          <Field label="Slot interval">
+            <select className="h-10 w-full rounded-[var(--radius)] border bg-surface-lowest px-3 text-sm">
+              <option>15 mins</option>
+              <option>30 mins</option>
+              <option>60 mins</option>
+            </select>
+          </Field>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function OrderSettingsContent() {
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <h3 className="font-semibold">Volume & Financial Thresholds</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Set hard boundaries for incoming orders.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <Field label="Minimum order value">
+            <Input defaultValue="500" type="number" />
+          </Field>
+          <Field label="Maximum active orders">
+            <Input defaultValue="50" type="number" />
+          </Field>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <h3 className="font-semibold">Automation & Timeouts</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Manage order lifecycle automation and timeouts.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <Field label="Auto-cancel unpaid orders (mins)">
+            <Input defaultValue="10" type="number" />
+          </Field>
+          <Toggle label="Automatically accept normal orders" />
+        </div>
+      </Card>
+      <Card className="p-5">
+        <h3 className="font-semibold">Customer Permissions & Modifiers</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Control what instructions and changes customers can make.
+        </p>
+        <div className="mt-5 space-y-4">
+          <Toggle label="Allow order notes" />
+          <Toggle label="Allow customer cancellation" />
+        </div>
+      </Card>
+      <Card className="bg-primary p-5 text-primary-foreground">
+        <h3 className="text-lg font-bold">Active Rules Enforced</h3>
+        <p className="mt-1 text-body-sm opacity-80">
+          These parameters apply immediately to all POS and online orders.
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded bg-white/10 p-3 text-sm">
+            Min order <b className="block text-lg">Rs. 500</b>
+          </div>
+          <div className="rounded bg-white/10 p-3 text-sm">
+            Max active <b className="block text-lg">50 orders</b>
+          </div>
+          <div className="rounded bg-white/10 p-3 text-sm">
+            Auto-cancel <b className="block text-lg">10 mins</b>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function OperatingHoursContent() {
+  const days = [
+    ["Monday", "11:00", "23:00"],
+    ["Tuesday", "11:00", "23:00"],
+    ["Wednesday", "11:00", "23:00"],
+    ["Thursday", "11:00", "00:00"],
+    ["Friday", "12:00", "01:00"],
+    ["Saturday", "12:00", "01:00"],
+    ["Sunday", "12:00", "23:00"],
+  ];
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <h3 className="font-semibold">Weekly Operating Schedule</h3>
+        <p className="mt-1 text-body-sm text-muted-foreground">
+          Configure your restaurant&apos;s weekly availability and split shifts.
+        </p>
+        <div className="mt-5 space-y-3">
+          {days.map(([day, open, close]) => (
+            <div
+              key={day}
+              className="grid items-center gap-3 border-b pb-3 sm:grid-cols-[120px_auto_1fr]"
+            >
+              <span className="text-body-sm font-semibold">{day}</span>
+              <Toggle label="Open" />
+              <div className="flex gap-2">
+                <Input
+                  type="time"
+                  defaultValue={open}
+                  aria-label={`${day} opening time`}
+                />
+                <Input
+                  type="time"
+                  defaultValue={close}
+                  aria-label={`${day} closing time`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card className="p-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="font-semibold">Special Closures</h3>
+            <p className="mt-1 text-body-sm text-muted-foreground">
+              Set specific dates when the restaurant will be closed.
+            </p>
+          </div>
+          <Button className="h-9">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Closure
+          </Button>
+        </div>
+        <div className="mt-5 space-y-3">
+          {[
+            ["Independence Day", "14 Aug 2026"],
+            ["Staff Training", "22 Aug 2026"],
+            ["Annual Maintenance", "01 Sep 2026"],
+          ].map(([title, date]) => (
+            <div
+              key={title}
+              className="flex items-center justify-between rounded border bg-surface-low p-3"
+            >
+              <div>
+                <p className="text-body-sm font-semibold">{title}</p>
+                <p className="text-xs text-muted-foreground">
+                  {date} · All day
+                </p>
+              </div>
+              <button
+                className="rounded p-2 text-muted-foreground hover:bg-muted hover:text-destructive"
+                aria-label={`Remove ${title}`}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card className="border-warning/30 bg-warning/10 p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold">Immediate Override</h3>
+            <p className="mt-1 text-body-sm text-muted-foreground">
+              Close the kitchen immediately due to an operational incident.
+            </p>
+          </div>
+          <Toggle label="Close now" checked={false} />
+        </div>
+      </Card>
+    </div>
+  );
+}
+
 function SettingsForm({
   kind,
 }: {
@@ -521,29 +849,13 @@ function SettingsForm({
         </CardHeader>
         <CardContent className="space-y-6">
           {kind === "operating-hours" ? (
-            <div className="space-y-3">
-              {[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ].map((day) => (
-                <div
-                  key={day}
-                  className="grid items-center gap-3 border-b pb-3 sm:grid-cols-[120px_1fr_auto]"
-                >
-                  <span className="text-body-sm font-semibold">{day}</span>
-                  <div className="flex gap-2">
-                    <Input type="time" defaultValue="10:00" />
-                    <Input type="time" defaultValue="23:00" />
-                  </div>
-                  <Toggle label="Open" />
-                </div>
-              ))}
-            </div>
+            <OperatingHoursContent />
+          ) : kind === "delivery" ? (
+            <DeliverySettingsContent />
+          ) : kind === "pickup" ? (
+            <PickupSettingsContent />
+          ) : kind === "orders" ? (
+            <OrderSettingsContent />
           ) : kind === "alerts" ? (
             <div className="grid gap-4 md:grid-cols-3">
               {[
@@ -583,26 +895,32 @@ function SettingsForm({
             <div className="grid gap-5 md:grid-cols-2">
               <Field
                 label={
-                  kind === "delivery"
-                    ? "Delivery radius (km)"
-                    : "Minimum order value"
+                  kind === "availability"
+                    ? "Pause duration (mins)"
+                    : "Notification channel"
                 }
               >
                 <Input
-                  defaultValue={kind === "delivery" ? "8" : "500"}
-                  type="number"
+                  defaultValue={
+                    kind === "availability" ? "30" : "Email + in-app"
+                  }
+                  type="text"
                 />
               </Field>
               <Field
                 label={
-                  kind === "delivery"
-                    ? "Delivery fee"
-                    : "Estimated preparation time"
+                  kind === "availability"
+                    ? "Customer message"
+                    : "Dispatch contact"
                 }
               >
                 <Input
-                  defaultValue={kind === "delivery" ? "150" : "30"}
-                  type="number"
+                  defaultValue={
+                    kind === "availability"
+                      ? "We will be back shortly."
+                      : "orders@pizzahouse.pk"
+                  }
+                  type="text"
                 />
               </Field>
               <div className="space-y-4 md:col-span-2">

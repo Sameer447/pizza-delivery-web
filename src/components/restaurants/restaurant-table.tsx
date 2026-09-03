@@ -4,10 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
   Mail,
-  MoreVertical,
   Phone,
   Search,
   Store,
@@ -17,6 +14,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
+import { Pagination } from "@/components/shared/pagination";
+import { RowActionsMenu } from "@/components/shared/row-actions-menu";
 
 export type RestaurantRow = {
   name: string;
@@ -212,42 +211,42 @@ export function RestaurantTable({
                   21 Aug 2026
                 </td>
                 <td className="px-4 py-3 text-center">
-                  <button
-                    className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-primary"
-                    aria-label={`Actions for ${restaurant.name}`}
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </button>
+                  <RowActionsMenu
+                    label={restaurant.name}
+                    actions={[
+                      {
+                        label: "View",
+                        href: `/restaurants/${restaurant.slug.replace(/^@/, "")}`,
+                      },
+                      { label: "Edit", onSelect: () => undefined },
+                      {
+                        label:
+                          restaurant.status === "Active"
+                            ? "Deactivate"
+                            : "Activate",
+                        onSelect: () => undefined,
+                      },
+                      {
+                        label: "Delete",
+                        destructive: true,
+                        dividerBefore: true,
+                        onSelect: () => undefined,
+                      },
+                    ]}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="flex flex-col gap-3 border-t bg-surface-low p-3 text-body-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <span>Showing 1 to 4 of 24 restaurants</span>
-        <div className="flex items-center gap-1">
-          <button
-            className="rounded border p-1.5 disabled:opacity-40"
-            disabled
-            aria-label="Previous page"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button className="rounded bg-primary px-3 py-1.5 font-medium text-white">
-            1
-          </button>
-          <button className="rounded border px-3 py-1.5 hover:bg-muted">
-            2
-          </button>
-          <button className="rounded border px-3 py-1.5 hover:bg-muted">
-            3
-          </button>
-          <button className="rounded border p-1.5" aria-label="Next page">
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+      <Pagination
+        page={1}
+        totalPages={3}
+        totalItems={24}
+        pageSize={4}
+        itemLabel="restaurants"
+      />
     </Card>
   );
 }

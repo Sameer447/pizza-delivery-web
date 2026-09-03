@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { PageLoading } from "@/components/shared/states";
 import { canAny, hasAnyRole } from "@/lib/permissions";
+import { canAccessRoute } from "@/lib/permissions/routes";
 import { useAuth } from "@/providers/auth-provider";
 import type { Permission, UserRole } from "@/types/auth";
 
@@ -51,37 +52,14 @@ export function RestaurantAccessGuard({ children }: { children: ReactNode }) {
 
 export function RouteAccessGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/restaurant-dashboard")) {
-    const permission = pathname.startsWith("/restaurant-dashboard/settings")
-      ? "restaurant.settings.read"
-      : pathname.startsWith("/restaurant-dashboard/profile")
-        ? "restaurant.profile.read"
-        : "restaurant.dashboard.read";
-    return (
-      <AccessGuard
-        roles={["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"]}
-        permissions={[permission]}
-      >
-        {children}
-      </AccessGuard>
-    );
-  }
-  if (pathname.startsWith("/restaurants")) {
-    return (
-      <AccessGuard roles={["SUPER_ADMIN"]} permissions={["restaurants.read"]}>
-        {children}
-      </AccessGuard>
-    );
-  }
-  if (pathname.startsWith("/administrations")) {
-    return (
-      <AccessGuard
-        roles={["SUPER_ADMIN"]}
-        permissions={["administrations.read"]}
-      >
-        {children}
-      </AccessGuard>
-    );
-  }
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const allowed = isAuthenticated && canAccessRoute(user, pathname);
+  const router = useRouter();
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) router.replace("/login");
+    else if (!isLoading && isAuthenticated && !allowed)
+      router.replace("/access-denied");
+  }, [allowed, isAuthenticated, isLoading, router]);
+  if (isLoading || !isAuthenticated || !allowed) return <PageLoading />;
   return children;
 }

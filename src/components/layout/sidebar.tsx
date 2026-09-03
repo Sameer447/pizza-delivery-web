@@ -25,12 +25,18 @@ import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/providers/auth-provider";
 
 const items = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    roles: ["SUPER_ADMIN"] as const,
+  },
   {
     label: "Restaurant Dashboard",
     href: "/restaurant-dashboard",
     icon: Store,
     permissions: ["restaurant.dashboard.read"],
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
   },
   {
     label: "Restaurants",
@@ -46,11 +52,48 @@ const items = [
     roles: ["SUPER_ADMIN"] as const,
     permissions: ["administrations.read"],
   },
-  { label: "Orders", href: "/orders", icon: ShoppingBag },
-  { label: "Menu", href: "/menu", icon: Utensils },
-  { label: "Customers", href: "/customers", icon: Users },
-  { label: "Coupons", href: "/coupons", icon: Ticket },
-  { label: "Reports", href: "/reports", icon: BarChart3 },
+  {
+    label: "Orders",
+    href: "/orders",
+    icon: ShoppingBag,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
+    permissions: ["orders.read"],
+  },
+  {
+    label: "Menu",
+    href: "/menu",
+    icon: Utensils,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
+    permissions: ["menu.read"],
+  },
+  {
+    label: "Categories",
+    href: "/categories",
+    icon: Utensils,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
+    permissions: ["categories.read"],
+  },
+  {
+    label: "Customers",
+    href: "/customers",
+    icon: Users,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN"] as const,
+    permissions: ["customers.read"],
+  },
+  {
+    label: "Coupons",
+    href: "/coupons",
+    icon: Ticket,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN"] as const,
+    permissions: ["coupons.read"],
+  },
+  {
+    label: "Reports",
+    href: "/reports",
+    icon: BarChart3,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN"] as const,
+    permissions: ["reports.read"],
+  },
   {
     label: "Staff",
     href: "/staff",
@@ -63,8 +106,15 @@ const items = [
     href: "/audit-logs",
     icon: Shield,
     roles: ["SUPER_ADMIN"] as const,
+    permissions: ["audit-logs.read"],
   },
-  { label: "Settings", href: "/restaurant-dashboard/settings", icon: Settings },
+  {
+    label: "Settings",
+    href: "/restaurant-dashboard/settings",
+    icon: Settings,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
+    permissions: ["restaurant.settings.read", "settings.read"],
+  },
 ];
 
 type SidebarProps = { open?: boolean; onClose?: () => void };
@@ -75,7 +125,9 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
   const visibleItems = items.filter(
     (item) =>
       (!item.roles || item.roles.some((role) => hasRole(user, role))) &&
-      (!item.permissions || canAny(user, item.permissions)),
+      (!item.permissions ||
+        !user?.permissionsLoaded ||
+        canAny(user, item.permissions)),
   );
 
   const isActive = (href: string) =>

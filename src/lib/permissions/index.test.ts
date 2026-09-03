@@ -18,6 +18,7 @@ const user: CurrentUser = {
   isActive: true,
   permissions: ["restaurants.create", "restaurants.read", "orders.read"],
   memberships: [],
+  permissionsLoaded: true,
 };
 describe("permission helpers", () => {
   it("checks explicit permissions", () => {

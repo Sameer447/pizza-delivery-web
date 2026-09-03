@@ -25,6 +25,7 @@ export type CurrentUser = User & {
   roles?: Role[];
   permissions: Permission[];
   memberships: RestaurantMembership[];
+  permissionsLoaded: boolean;
 };
 export type AuthState = {
   user: CurrentUser | null;
@@ -43,8 +44,13 @@ export type AuthSession = {
   expiresIn: string;
 };
 export type AuthResponse = { success: true; data: AuthSession };
+export type MePayload = {
+  user: User;
+  restaurants?: Array<{ id: string; name: string }>;
+  permissions?: Permission[];
+};
 export type MeResponse =
-  User | { user: User } | { success: true; data: User | { user: User } };
+  User | MePayload | { success: true; data: User | MePayload };
 export type ApiErrorBody = {
   success: false;
   error: { code: string; message: string; details?: unknown };

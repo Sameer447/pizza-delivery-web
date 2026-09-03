@@ -10,8 +10,13 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { authApi } from "@/lib/api/auth";
-import { ApiError, registerRefreshHandler, resetRefreshHandler } from "@/lib/api/client";
+import {
+  ApiError,
+  registerRefreshHandler,
+  resetRefreshHandler,
+} from "@/lib/api/client";
 import { tokenManager } from "@/lib/auth/token-manager";
+import { getRoleHomePath } from "@/lib/permissions/routes";
 import type { AuthState, CurrentUser, LoginRequest } from "@/types/auth";
 type AuthContextValue = AuthState & {
   login: (input: LoginRequest) => Promise<void>;
@@ -69,8 +74,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login: async (input) => {
         const result = await authApi.login(input);
         tokenManager.set(result.accessToken);
-        setUser(result.user);
-        router.push("/dashboard");
+        let currentUser = result.user;
+        try {
+          currentUser = await authApi.me();
+        } catch {
+          // Keep the successful login if profile hydration is temporarily unavailable.
+        }
+        setUser(currentUser);
+        router.push(getRoleHomePath(currentUser));
       },
       logout: async () => {
         try {

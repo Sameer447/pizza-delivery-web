@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/providers/auth-provider";
 import { PageLoading } from "@/components/shared/states";
+import { getRoleHomePath } from "@/lib/permissions/routes";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -30,12 +31,17 @@ export default function LoginPage() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>();
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   useEffect(() => {
-    if (!isLoading && isAuthenticated) router.replace("/dashboard");
-  }, [isAuthenticated, isLoading, router]);
-  if (isLoading || isAuthenticated) return <main className="flex min-h-screen items-center justify-center bg-background"><PageLoading /></main>;
+    if (!isLoading && isAuthenticated) router.replace(getRoleHomePath(user));
+  }, [isAuthenticated, isLoading, router, user]);
+  if (isLoading || isAuthenticated)
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background">
+        <PageLoading />
+      </main>
+    );
   const submit = async (values: FormValues) => {
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
