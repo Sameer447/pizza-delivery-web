@@ -14,6 +14,7 @@ import {
   ShoppingBag,
   Store,
   Ticket,
+  Wheat,
   UserCog,
   Users,
   Utensils,
@@ -65,6 +66,13 @@ const items = [
     icon: Utensils,
     roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
     permissions: ["menu.read"],
+  },
+  {
+    label: "Toppings & Extras",
+    href: "/toppings",
+    icon: Wheat,
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"] as const,
+    permissions: ["toppings.read"],
   },
   {
     label: "Categories",

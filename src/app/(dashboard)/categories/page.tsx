@@ -1,5 +1,5 @@
-import { CategoryList } from "@/components/categories/category-list";
+import { CategoryApiList } from "@/components/categories/category-api-list";
 
 export default function CategoriesPage() {
-  return <CategoryList />;
+  return <CategoryApiList />;
 }

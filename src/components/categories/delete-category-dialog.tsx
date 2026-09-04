@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 
 type DeleteCategoryDialogProps = {
   onClose: () => void;
+  onDelete?: () => void;
   categoryName: string;
   itemCount: number;
 };
 
 export function DeleteCategoryDialog({
   onClose,
+  onDelete,
   categoryName,
   itemCount,
 }: DeleteCategoryDialogProps) {
@@ -97,7 +99,8 @@ export function DeleteCategoryDialog({
           </Button>
           <Button
             type="button"
-            disabled
+            disabled={itemCount > 0}
+            onClick={onDelete}
             className="bg-surface-high text-muted-foreground"
             title="Cannot delete category while items are assigned"
           >

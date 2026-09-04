@@ -50,6 +50,11 @@ const routePolicies: RoutePolicy[] = [
     permissions: ["menu.read"],
   },
   {
+    prefix: "/toppings",
+    roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN", "RESTAURANT_STAFF"],
+    permissions: ["toppings.read"],
+  },
+  {
     prefix: "/customers",
     roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN"],
     permissions: ["customers.read"],

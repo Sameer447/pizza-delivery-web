@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   CheckCircle2,
   Clock3,
@@ -16,10 +16,18 @@ import {
 } from "lucide-react";
 
 import { RowActionsMenu } from "@/components/shared/row-actions-menu";
+import { ErrorState, PageLoading } from "@/components/shared/states";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
+import {
+  useMenuItem,
+  useMenuItems,
+  useMenuMutations,
+} from "@/hooks/use-catalog";
+import { useRestaurant } from "@/providers/restaurant-provider";
+import type { MenuItem as ApiMenuItem, MenuItemStatus } from "@/types/catalog";
 
 type Status = "Active" | "Unavailable" | "Draft";
 type MenuRecord = {
@@ -32,62 +40,6 @@ type MenuRecord = {
   status: Status;
   updated: string;
 };
-
-const records: MenuRecord[] = [
-  {
-    id: "chicken-tikka",
-    name: "Chicken Tikka",
-    category: "Specialty Pizzas",
-    description:
-      "Spicy marinated chicken, roasted peppers, and signature sauce",
-    prices: ["799", "1,099", "1,399"],
-    orders: "1,428",
-    status: "Active",
-    updated: "2 hours ago",
-  },
-  {
-    id: "truffle-forest",
-    name: "Truffle Forest Mushroom",
-    category: "Gourmet & Special",
-    description:
-      "Wild mushrooms, garlic cream, fontina cheese, black truffle oil",
-    prices: ["1,099", "1,499", "1,899"],
-    orders: "612",
-    status: "Unavailable",
-    updated: "3 days ago",
-  },
-  {
-    id: "inferno-diablo",
-    name: "Inferno Diablo",
-    category: "Spicy & Hot",
-    description:
-      "Spicy nduja, calabrian chilies, roasted red peppers, mozzarella",
-    prices: ["949", "1,299", "1,649"],
-    orders: "943",
-    status: "Active",
-    updated: "5 days ago",
-  },
-  {
-    id: "garden-primavera",
-    name: "Garden Primavera Vibe",
-    category: "Vegetarian",
-    description: "Zucchini, bell peppers, cherry tomatoes, kalamata olives",
-    prices: ["849", "1,149", "1,449"],
-    orders: "419",
-    status: "Draft",
-    updated: "1 week ago",
-  },
-  {
-    id: "pepperoni",
-    name: "Pepperoni Classic",
-    category: "Classic Pizzas",
-    description: "Premium pepperoni, mozzarella, and rich tomato sauce",
-    prices: ["799", "1,099", "1,399"],
-    orders: "1,104",
-    status: "Active",
-    updated: "2 weeks ago",
-  },
-];
 
 const statusStyles: Record<Status, string> = {
   Active: "bg-tertiary/10 text-tertiary",
@@ -112,18 +64,26 @@ function Crumbs({ current }: { current: string }) {
 }
 
 export function MenuCatalogList() {
+  const { selectedRestaurantId } = useRestaurant();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
   const [selected, setSelected] = useState<MenuRecord | null>(null);
-  const items = useMemo(
-    () =>
-      records.filter(
-        (item) =>
-          item.name.toLowerCase().includes(query.toLowerCase()) &&
-          (status === "all" || item.status.toLowerCase() === status),
-      ),
-    [query, status],
-  );
+  const menuQuery = useMenuItems(selectedRestaurantId, {
+    page: 1,
+    pageSize: 20,
+    search: query || undefined,
+    status:
+      status === "all" ? undefined : (status.toUpperCase() as MenuItemStatus),
+    sort: "popular",
+    direction: "desc",
+  });
+  const mutations = useMenuMutations(selectedRestaurantId);
+  const items = (menuQuery.data?.items ?? []).map(toMenuRecord);
+  if (menuQuery.isLoading) return <PageLoading />;
+  if (menuQuery.isError)
+    return (
+      <ErrorState message="Unable to load menu items. Please try again." />
+    );
   return (
     <div className="h-full overflow-y-auto bg-background p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1440px] space-y-6">
@@ -305,7 +265,14 @@ export function MenuCatalogList() {
                                 : item.status === "Draft"
                                   ? "Publish Draft"
                                   : "Mark Active",
-                            onSelect: () => undefined,
+                            onSelect: () =>
+                              mutations.status.mutate({
+                                id: item.id,
+                                status:
+                                  item.status === "Active"
+                                    ? "UNAVAILABLE"
+                                    : "ACTIVE",
+                              }),
                           },
                           {
                             label: "Delete",
@@ -366,6 +333,11 @@ export function MenuCatalogList() {
         <MenuDeleteConfirmation
           item={selected}
           onClose={() => setSelected(null)}
+          onDelete={() =>
+            mutations.remove.mutate(selected.id, {
+              onSuccess: () => setSelected(null),
+            })
+          }
         />
       )}
     </div>
@@ -407,9 +379,11 @@ function Stat({
 function MenuDeleteConfirmation({
   item,
   onClose,
+  onDelete,
 }: {
   item: MenuRecord;
   onClose: () => void;
+  onDelete: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-inverse-surface/60 p-4 backdrop-blur-sm">
@@ -457,6 +431,7 @@ function MenuDeleteConfirmation({
           </Button>
           <Button
             type="button"
+            onClick={onDelete}
             className="bg-error text-white hover:bg-error/90"
           >
             <Trash2 className="mr-2 h-4 w-4" />
@@ -469,7 +444,14 @@ function MenuDeleteConfirmation({
 }
 
 export function MenuCatalogDetails({ id }: { id: string }) {
-  const item = records.find((entry) => entry.id === id) ?? records[0];
+  const { selectedRestaurantId } = useRestaurant();
+  const menuQuery = useMenuItem(selectedRestaurantId, id);
+  if (menuQuery.isLoading) return <PageLoading />;
+  if (menuQuery.isError || !menuQuery.data)
+    return (
+      <ErrorState message="Unable to load this menu item. Please try again." />
+    );
+  const item = toMenuRecord(menuQuery.data);
   const sizes = [
     ['Small (8")', "4 Slices · 1-2 Persons", item.prices[0]],
     ['Medium (12")', "6 Slices · 2-3 Persons", item.prices[1]],
@@ -690,6 +672,24 @@ export function MenuCatalogDetails({ id }: { id: string }) {
       </div>
     </div>
   );
+}
+
+function toMenuRecord(item: ApiMenuItem): MenuRecord {
+  return {
+    id: item.id,
+    name: item.name,
+    category: item.category?.name ?? "Menu",
+    description: item.description ?? "",
+    prices: item.sizes.map((size) => String(Math.round(size.priceMinor / 100))),
+    orders: String(item.orderCount),
+    status:
+      item.status === "ACTIVE"
+        ? "Active"
+        : item.status === "UNAVAILABLE"
+          ? "Unavailable"
+          : "Draft",
+    updated: new Date(item.updatedAt).toLocaleDateString(),
+  };
 }
 
 function DetailStat({

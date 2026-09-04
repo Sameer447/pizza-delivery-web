@@ -1,4 +1,5 @@
-import Link from "next/link";
-import { UserPlus } from "lucide-react";
-import { AdministrationTable } from "@/components/administrations/administration-table";
-export default function AdministrationsPage() { return <div className="h-full overflow-y-auto p-4 sm:p-6"><div className="mx-auto max-w-[1440px] space-y-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><h1 className="type-page-title">Administrators</h1><p className="mt-1 text-body-reg text-muted-foreground">Manage team members, access roles, and platform permissions.</p></div><Link href="/administrations/invite" className="inline-flex h-10 items-center justify-center gap-2 rounded-[var(--radius)] bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-container"><UserPlus className="h-4 w-4" />Invite Administrator</Link></div><AdministrationTable /></div></div>; }
+import { PlatformAdministrations } from "@/components/platform/platform-screens";
+
+export default function AdministrationsPage() {
+  return <PlatformAdministrations />;
+}
