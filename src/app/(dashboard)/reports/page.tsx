@@ -1,3 +1,5 @@
-import { PageContainer } from "@/components/layout/page-container";
-import { EmptyState } from "@/components/shared/states";
-export default function ReportsPage() { return <PageContainer title="Reports"><EmptyState /></PageContainer>; }
+import { ReportsOverviewScreen } from "@/components/reports/reports-overview-screen";
+
+export default function ReportsPage() {
+  return <ReportsOverviewScreen />;
+}

@@ -1,3 +1,5 @@
-import { PageContainer } from "@/components/layout/page-container";
-import { EmptyState } from "@/components/shared/states";
-export default function CustomersPage() { return <PageContainer title="Customers"><EmptyState /></PageContainer>; }
+import { CustomersListScreen } from "@/components/customers/customers-list-screen";
+
+export default function CustomersPage() {
+  return <CustomersListScreen />;
+}

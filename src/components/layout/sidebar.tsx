@@ -96,11 +96,17 @@ const items = [
     permissions: ["coupons.read"],
   },
   {
-    label: "Reports",
+    label: "Reports & Analytics",
     href: "/reports",
     icon: BarChart3,
     roles: ["SUPER_ADMIN", "RESTAURANT_ADMIN"] as const,
     permissions: ["reports.read"],
+    children: [
+      { label: "Executive Overview", href: "/reports" },
+      { label: "Revenue & Fleet", href: "/reports/revenue-fleet" },
+      { label: "Orders & Delivery", href: "/reports/orders-delivery" },
+      { label: "Menu Economics", href: "/reports/menu-economics" },
+    ],
   },
   {
     label: "Staff",
@@ -108,6 +114,10 @@ const items = [
     icon: UserCog,
     roles: ["RESTAURANT_ADMIN"] as const,
     permissions: ["staff.read"],
+    children: [
+      { label: "Staff Directory", href: "/staff" },
+      { label: "Security Governance", href: "/staff/security-governance" },
+    ],
   },
   {
     label: "Audit Logs",
@@ -179,21 +189,44 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
           <Plus className="h-4 w-4" /> New Order
         </button>
         <nav className="flex-1 space-y-1 px-4" aria-label="Main navigation">
-          {visibleItems.map(({ label, href, icon: Icon }) => {
+          {visibleItems.map(({ label, href, icon: Icon, children }) => {
             const active = isActive(href);
             return (
-              <Link
-                key={href}
-                href={href}
-                onClick={onClose}
-                className={cn(
-                  "nav-link flex items-center gap-3 px-3 py-2 text-sm",
-                  active && "active",
+              <div key={href}>
+                <Link
+                  href={href}
+                  onClick={onClose}
+                  className={cn(
+                    "nav-link flex items-center gap-3 px-3 py-2 text-sm",
+                    active && "active",
+                  )}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <Icon className="h-4 w-4" /> {label}
+                </Link>
+                {children && active && (
+                  <div className="ml-7 mt-1 space-y-0.5 border-l border-zinc-700 pl-2">
+                    {children.map((child) => {
+                      const childActive = pathname === child.href;
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={onClose}
+                          className={cn(
+                            "block rounded px-2 py-1.5 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                            childActive &&
+                              "bg-zinc-800 font-semibold text-white",
+                          )}
+                          aria-current={childActive ? "page" : undefined}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-                aria-current={active ? "page" : undefined}
-              >
-                <Icon className="h-4 w-4" /> {label}
-              </Link>
+              </div>
             );
           })}
         </nav>

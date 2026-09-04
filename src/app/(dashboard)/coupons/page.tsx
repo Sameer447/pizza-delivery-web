@@ -1,3 +1,5 @@
-import { PageContainer } from "@/components/layout/page-container";
-import { EmptyState } from "@/components/shared/states";
-export default function CouponsPage() { return <PageContainer title="Coupons"><EmptyState /></PageContainer>; }
+import { CouponsListScreen } from "@/components/coupons/coupons-list-screen";
+
+export default function CouponsPage() {
+  return <CouponsListScreen />;
+}

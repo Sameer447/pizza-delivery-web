@@ -1,3 +1,5 @@
-import Link from "next/link";
-import { InviteForm } from "@/components/administrations/invite-form";
-export default function InviteAdministrationPage() { return <div className="h-full overflow-y-auto p-4 sm:p-6"><div className="mx-auto max-w-[1100px] space-y-6"><div className="border-b pb-6"><div className="mb-2 text-body-sm font-semibold uppercase tracking-wider text-muted-foreground"><Link href="/dashboard" className="hover:text-primary">Dashboard</Link> / <Link href="/administrations" className="hover:text-primary">Administrators</Link> / Invite</div><h1 className="type-page-title">Invite Restaurant Administrator</h1><p className="mt-1 text-body-reg text-muted-foreground">Send an invitation to a user to manage this restaurant.</p></div><div className="grid gap-6 lg:grid-cols-3"><section className="rounded-[var(--radius-lg)] border bg-surface-lowest p-6 lg:col-span-2"><InviteForm /></section><aside className="rounded-[var(--radius-lg)] border bg-surface-lowest p-6"><h2 className="type-card-title">Invitation Workflow</h2><p className="mt-1 text-body-sm text-muted-foreground">What happens next?</p><ol className="mt-5 space-y-4 text-body-sm text-muted-foreground"><li><b className="text-foreground">1. Invitation sent</b><br />The recipient receives an email with a secure link.</li><li><b className="text-foreground">2. Account setup</b><br />They create credentials and accept the assigned role.</li><li><b className="text-foreground">3. Access enabled</b><br />Their permissions are recorded and ready for review.</li></ol></aside></div></div></div>; }
+import { InviteStaffModalScreen } from "@/components/staff/invite-staff-modal-screen";
+
+export default function InviteAdministrationPage() {
+  return <InviteStaffModalScreen />;
+}
