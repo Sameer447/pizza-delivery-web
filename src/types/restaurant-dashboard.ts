@@ -14,7 +14,7 @@ export type RestaurantDashboardSummary = {
     id: string;
     itemCount: number;
     total: number;
-    status: "PENDING" | "CONFIRMED" | "PREPARING" | "DELAYED";
+    status: string;
     createdAt: string;
   }>;
   recentOrders: Array<{

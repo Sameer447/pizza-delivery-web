@@ -1,4 +1,4 @@
-import { RestaurantDashboardScreen } from "@/components/restaurant-dashboard/restaurant-dashboard-screen";
+import { LiveRestaurantDashboard } from "@/components/restaurant-dashboard/live-restaurant-dashboard";
 export default function RestaurantDashboardPage() {
-  return <RestaurantDashboardScreen variant="dashboard" />;
+  return <LiveRestaurantDashboard />;
 }

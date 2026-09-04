@@ -77,7 +77,7 @@ const routePolicies: RoutePolicy[] = [
   {
     prefix: "/audit-logs",
     roles: ["SUPER_ADMIN"],
-    permissions: ["audit-logs.read"],
+    permissions: ["audit_logs.read"],
   },
   {
     prefix: "/settings",

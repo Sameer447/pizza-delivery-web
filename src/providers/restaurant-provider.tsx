@@ -24,7 +24,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
   );
   const setSelectedRestaurant = useCallback(
     (id: string) => {
-      if (
+      if (user?.role === "SUPER_ADMIN" ||
         availableRestaurants.some(
           (restaurant) => restaurant.restaurantId === id,
         )
@@ -32,7 +32,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
         setSelected(id);
       }
     },
-    [availableRestaurants],
+    [availableRestaurants, user?.role],
   );
   const value = useMemo(
     () => ({
