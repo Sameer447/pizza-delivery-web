@@ -1,5 +1,5 @@
-import { KitchenCommandsScreen } from "@/components/orders/kitchen-commands-screen";
+import { LiveKitchenScreen } from "@/components/orders/live-kitchen-screen";
 
 export default function KitchenCommandsPage() {
-  return <KitchenCommandsScreen />;
+  return <LiveKitchenScreen />;
 }

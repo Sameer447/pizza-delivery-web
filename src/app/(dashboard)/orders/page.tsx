@@ -1,5 +1,5 @@
-import { OrdersListScreen } from "@/components/orders/orders-list-screen";
+import { LiveOrdersScreen } from "@/components/orders/live-orders-screen";
 
 export default function OrdersPage() {
-  return <OrdersListScreen />;
+  return <LiveOrdersScreen />;
 }

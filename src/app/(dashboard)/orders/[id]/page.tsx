@@ -1,5 +1,5 @@
-import { OrderDetailsScreen } from "@/components/orders/order-details-screen";
+import { LiveOrderDetails } from "@/components/orders/live-order-details";
 
 export default function OrderDetailsPage() {
-  return <OrderDetailsScreen />;
+  return <LiveOrderDetails />;
 }
